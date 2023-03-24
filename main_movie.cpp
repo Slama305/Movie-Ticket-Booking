@@ -1,20 +1,21 @@
 #include <bits/stdc++.h>
 #include <fstream>
 using namespace std;
+#define slama() ios_base::sync_with_stdio(false),cin.tie(0),cout.tie(0);
 ////////////////////////////////////////////////////////////////////////
 class movie{
 	public:     //movie info 
 		int code=0;
-		char name[10]={'n','u','l','l'};
-		char date[10]={'n','u','l','l'};
-		char time[10]={'n','u','l','l'};
+		char name[20]={};
+		char date[20]={};
+		char time[20]={};
 		int price=0;
 };
 ////////////////////////////////////////////////////////////////////////
 class book{
 	public:     //user data
-		char movie_name[10]={'n','u','l','l'};
-		char user_name[10]={'n','u','l','l'};
+		char movie_name[20]={};
+		char user_name[20]={};
 		int phone=0;
 		int num_tick=0;
 };
@@ -124,7 +125,7 @@ void view_all_movie(){
 	f_movie.close();
 	}
    else{
-      cout<<"\t\t\t !!!!!!!!!!! cant found file  !!!!!!!!!!!\n\n"<<endl;
+      cout<<"\t\t\t !!!!!!!!!!! cant found Movie  !!!!!!!!!!!\n\n"<<endl;
    }
 }
 ////////////////////////////////////////////////////////////////////////// 
@@ -280,8 +281,17 @@ void del_movie(){
 	cout<<" _________________________________________________\n";
 }
 ////////////////////////////////////////////////////////////////////
+void del_allmovie(){
+	fstream f_movie;         // delete all Movie 
+	f_movie.open("after_del.txt");
+	remove("movie.txt");
+	rename("after_del.txt","movie.txt");
+	cout<<"\n\tdeleted successfully \n";
+	cout<<" _________________________________________________\n";
+}
+////////////////////////////////////////////////////////////////////
 void del_booking(){
-	string check;         //delete movie by name
+	string check;         //delete booking by your name !
 	cout<<"please ..!Enter your name to delete for : ";
 	cin>>check;
 	book b;
@@ -310,7 +320,7 @@ void del_booking(){
 }
 /////////////////////////////////////////////////////////////////////////
 void Booking_requests(){
-	fstream  f_user ;      // show requests
+	fstream  f_user ;      // show requests to management
 	book b;   // object 
 	int code=0;
 	int flag=0;       
@@ -331,11 +341,11 @@ void Booking_requests(){
 	f_user.close();
 	}
    else{
-      cout<<"\t\t\t !!!!!!!!!!! cant found file  !!!!!!!!!!!\n\n"<<endl;
+      cout<<"\t\t\t !!!!!!!!!!! cant found Booking requests  !!!!!!!!!!!\n\n"<<endl;
    }
 }
 /////////////////////////////////////////////////////////////////////
-void check_(void function()){
+void check_(void function()){    // test continue
 	         cout<<"__Press (0) Exit \n"
 	  			    <<"__Press (1) continue\n";
 	  			int q;cin>>q;
@@ -349,14 +359,15 @@ void check_(void function()){
 					   }
 }
 /////////////////////////////////////////////////////////////////////
-void management(){
+void management(){    //management system
       int cases;
 	  cout<<"\t\t\t   Press (1) Insert Movie \n"
 	      <<"\t\t\t   Press (2) View All Movie \n"
 	      <<"\t\t\t   Press (3) Search Movie \n"
 	      <<"\t\t\t   Press (4) Update movie \n"
 	      <<"\t\t\t   Press (5) Delete movie \n"
-	      <<"\t\t\t   Press (6) View Booking Requests \n"
+	      <<"\t\t\t   Press (6) Delete All movie \n"
+	      <<"\t\t\t   Press (7) View Booking Requests \n"
 	      <<"\t\t\t   Press (0) Exit \n\n";
 	  	   cin>>cases;
 	      if(cases==0){
@@ -383,7 +394,12 @@ void management(){
 	  			del_movie();
 	  			check_(management);
 			  }
-		   else if(cases==6){
+			else if(cases==6){
+	  			del_allmovie();
+	  			check_(management);
+			  }
+		   
+		   else if(cases==7){
 	  			Booking_requests();
 	  			check_(management);
 			  }
@@ -394,7 +410,7 @@ void management(){
 			  }
 }
 ////////////////////////////////////////////////////////////////////////
-void viewer(){
+void viewer(){    // viewer system
 		cout<<endl;
      	int cases;
 	  cout<<"\t\t\t   Press (1) View All Movie \n"
@@ -446,7 +462,7 @@ void fun(){   //solve here
 	        cin>>file;
 	   switch(file){
 	   	case 1:
-	   		cout<<"\n\t\t\t__please inter password__\n";
+	   		cout<<"\n\t\t\t__please Enter password__\n";
 	   		int pass;cin>>pass;
 	   		if(pass==1234){
 	   		management();
@@ -462,7 +478,8 @@ void fun(){   //solve here
 		}              
 }
 //////////////////////////////////////////////////////////////////// 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) { 
 	 fun();
+	 slama();
 	return 0;
 }
