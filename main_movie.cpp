@@ -14,21 +14,44 @@ class movie{
 ////////////////////////////////////////////////////////////////////////
 class book{
 	public:     //user data
-		char movie_name[20]={};
+	   char  movie_name[20]={};
 		char user_name[20]={};
 		int phone=0;
 		int num_tick=0;
 };
 ////////////////////////////////////////////////////////////////////////
+bool isFound(string check){
+	fstream f_movie ;    //shearch by name
+	movie m ;
+	bool flag=false; 
+	f_movie.open("movie.txt",ios::in);
+  	while(!f_movie.eof()){
+		f_movie.read((char*)&m,sizeof(m));
+	    	if( m.name == check ){
+		   	  flag=true; 
+			   }
+	      }
+		return flag; 
+	f_movie.close();
+}
+///////////////////////////////////////////////////////////////////////// 
+string nameMovie ;
 void insert_data(){
 	fstream f_user , f_movie ;
 	book b ;
 	movie m ;
+	
 	f_user.open("data.txt",ios::out|ios::in | ios::app);
 	f_movie.open("movie.txt",ios::in);
-	if(f_user.is_open() ||f_movie.is_open() ){
+	if(f_user.is_open() || f_movie.is_open() ){
 		cout<<" Enter Movie Name : ";   //enter user data
-		cin>>b.movie_name;
+		 cin>>b.movie_name;
+		if(!isFound(b.movie_name)){
+				cout<<"\n\tthis movie not found..!\n";  
+	      	cout<<" _________________________________________________\n";  
+	       	return;
+		}
+		nameMovie=b.movie_name ;
 		cout<<" your Name : ";
 		cin>>b.user_name;
 		cout<<" mobile phone : ";
@@ -40,13 +63,14 @@ void insert_data(){
 		cout<<" _________________________________________________\n";
   /*************************************************************/                     	
 	int code=0;
-	string check = b.movie_name ;
-	int flag=0;
+//	string check = b.movie_name ;
+// int flag=0;
+
 	while(!f_user.eof() || !f_movie.eof()){       //view user data
 		f_user.read((char*)&b,sizeof(b));
 		f_movie.read((char*)&m,sizeof(m));
 		if(m.code!=code){
-	    	if(m.name == check){
+	    	if( m.name == nameMovie){
 	    		cout<<"\n\t**** "<<m.name<<" Movie ****";
 		   	cout<<"\n\tName : "<<b.user_name
 		   	<<"\n\tNumber phone : "<<b.phone
@@ -54,17 +78,14 @@ void insert_data(){
 		   	<<"\n\tMovie Name : "<<m.name
 		   	<<"\n\tDate : "<<m.date
 		   	<<"\n\tTime : "<<m.time
+		   	<<"\n\tTicket Price : "<<m.price
 		   	<<"\n\tTotal seats : "<<b.num_tick
 		   	<<"\n\tTotal Amount : "<<(b.num_tick)*(m.price)<<" EGP"<<"\n";
 				cout<<"____________________________________________________\n"; 
-		  	   flag=1;
+		  	  // flag=1;
 	      }
 	      code=m.code;
 	   } 
-	}
-	if(flag==0){
-		cout<<"\n\tthis movie not found..!\n";  
-		cout<<" _________________________________________________\n";  
 	}
 	/****************************************************************/
 	f_user.close();
@@ -91,7 +112,7 @@ void insert_movie(){
 		cout<<" Enter Time : ";
 		cin>>m.time;
 		f_movie.write((char*)&m,sizeof(m));
-		cout<<" Record insert sucessfull \n";
+		cout<<"\n\t\t Record insert sucessfull \n";
 		cout<<" _________________________________________________\n";		
 	f_movie.close();
 	}
@@ -135,7 +156,7 @@ void search(){
 	int code = 0 ;
 	string check ;
 	int c = 0 ;
-	cout<<"please ..!Enter movie name  : ";
+	cout<<"\tplease ..!Enter movie name  : ";
 	cin>>check;
 	f_movie.open("movie.txt",ios::in);
 	int flag = 0 ;
@@ -159,7 +180,7 @@ void search(){
 	   } 
 	}
 	if(flag==0){
-		cout<<"this movie not found..!\n";
+		cout<<"\n\t\tthis movie not found..!\n";
 		cout<<" _________________________________________________\n";
 	}
 	f_movie.close();
@@ -241,7 +262,74 @@ void update(){
 	      f_movie.read((char*)&m,sizeof(m));
 	}
 	if(flag==0){
-		cout<<"this movie not found..!\n";
+		cout<<"\n\t\tthis movie not found..!\n";
+		cout<<" _________________________________________________\n";
+		
+	}
+	f_movie.close();
+	}
+   else{
+      cout<<"\t\t\t !!!!!!!!!!! cant found file  !!!!!!!!!!!\n\n"<<endl;
+   }
+}
+///////////////////////////////////////////////////////////////////////
+void update_all(){
+	fstream  f_movie ;    //update Movie
+	movie m ;
+	string  check;
+	int c=0; //conter
+	cout<<"\nplease ..!Enter movie name  : ";
+	cin>>check; 
+	f_movie.open("movie.txt",ios::in | ios::out);
+	int flag=0;
+	f_movie.read((char*)&m,sizeof(m));
+	if(f_movie.is_open()){
+	while(!f_movie.eof()){
+		c++;
+	    	if( m.name == check  ){
+	    		flag=1;
+	    		int q ;
+	    		int cur_pos ;
+	    		int rec_size ;
+	    			cout<<"Enter New Name : ";
+	    			cin>>m.name;
+			
+	    			cout<<"Enter New Code : ";
+	    			cin>>m.code;
+			
+	    			cout<<"Enter New price : ";
+	    			cin>>m.price;
+				
+	    			cout<<"Enter New Date : ";
+	    			cin>>m.date;
+			
+	    			cout<<"Enter New Time : ";
+	    			cin>>m.time;
+	    			
+				cout<<" _________________________________________________\n";
+				  cur_pos = f_movie.tellg();
+				  rec_size =sizeof(m);
+				 f_movie.seekp(cur_pos-rec_size,ios::beg);
+				 f_movie.write((char*)&m,sizeof(m));
+////////////////////////////////////////////////////////////////////////////
+				cout<<" _________________________________________________\n";
+		         f_movie.seekg(cur_pos-rec_size,ios::beg);
+				   f_movie.read((char*)&m,sizeof(m));
+				cout<<"\n\tModified successfully ";
+		   	cout<<"\nRecorde : "
+			   	<<c<<"\nCode : "
+			   	<<m.code<<"\nName: "
+		   		<<m.name<<"\nDate :"
+		      	<<m.date<<"\nTime :"
+		   	   <<m.time<<"\nTicket Price :"
+		   		<<m.price<<"\n";
+		   	cout<<" _________________________________________________\n";
+		   	break;
+	      }
+	      f_movie.read((char*)&m,sizeof(m));
+	}
+	if(flag==0){
+		cout<<"\n\t\tthis movie not found..!\n";
 		cout<<" _________________________________________________\n";
 		
 	}
@@ -315,7 +403,7 @@ void del_booking(){
 	new_file.close();
 	remove("data.txt");
 	rename("new_data.txt","data.txt");
-	cout<<"\n\tdeleted successfully \n";
+	cout<<"\n\t\tdeleted successfully \n";
 	cout<<" _________________________________________________\n";
 }
 /////////////////////////////////////////////////////////////////////////
@@ -328,7 +416,9 @@ void Booking_requests(){
 	if( f_user.is_open() ){
 	while( !f_user.eof() ){
 		f_user.read((char*)&b,sizeof(b));
+	    flag++;   // check found 
 		if(b.phone!=code){
+			//flag++;
 			cout<<"\n____________________________________________________\n"; 
 		   	cout<<"\n\tName : "<<b.user_name
 		   	<<"\n\tNumber phone : "<<b.phone
@@ -338,6 +428,10 @@ void Booking_requests(){
 		  	   code=b.phone;
 	   } 
 	}
+	if(flag==1){
+		cout<<"\n\t\tnot found Booking requests ..!\n";
+		cout<<" _________________________________________________\n";
+	}
 	f_user.close();
 	}
    else{
@@ -345,6 +439,7 @@ void Booking_requests(){
    }
 }
 /////////////////////////////////////////////////////////////////////
+void fun();
 void check_(void function()){    // test continue
 	         cout<<"__Press (0) Exit \n"
 	  			    <<"__Press (1) continue\n";
@@ -365,9 +460,11 @@ void management(){    //management system
 	      <<"\t\t\t   Press (2) View All Movie \n"
 	      <<"\t\t\t   Press (3) Search Movie \n"
 	      <<"\t\t\t   Press (4) Update movie \n"
-	      <<"\t\t\t   Press (5) Delete movie \n"
-	      <<"\t\t\t   Press (6) Delete All movie \n"
-	      <<"\t\t\t   Press (7) View Booking Requests \n"
+	      <<"\t\t\t   Press (5) Update All Data \n"
+	      <<"\t\t\t   Press (6) Delete movie \n"
+	      <<"\t\t\t   Press (7) Delete All movie \n"
+	      <<"\t\t\t   Press (8) View Booking Requests \n"
+	      <<"\t\t\t   Press (9) Home \n"
 	      <<"\t\t\t   Press (0) Exit \n\n";
 	  	   cin>>cases;
 	      if(cases==0){
@@ -391,20 +488,27 @@ void management(){    //management system
 	  			check_(management);
 			  }
 			else if(cases==5){
-	  			del_movie();
+	  			update_all();
 	  			check_(management);
 			  }
 			else if(cases==6){
+	  			del_movie();
+	  			check_(management);
+			  }
+			else if(cases==7){
 	  			del_allmovie();
 	  			check_(management);
 			  }
 		   
-		   else if(cases==7){
+		   else if(cases==8){
 	  			Booking_requests();
 	  			check_(management);
 			  }
+			else if(cases==9){
+	  			fun();
+			  }
 	  		else{
-	  			cout<<"this number is incorrect!\n";
+	  			cout<<"\n\t\tthis number is incorrect!\n";
 	  			cout<<" _________________________________________________\n";
 	  			return;
 			  }
@@ -417,6 +521,7 @@ void viewer(){    // viewer system
 	      <<"\t\t\t   Press (2) Search Movie \n"
 	      <<"\t\t\t   Press (3) Book Ticket \n"
 	      <<"\t\t\t   Press (4) Delete Booking \n"
+	      <<"\t\t\t   Press (5) Home \n"
 	      <<"\t\t\t   Press (0) Exit \n\n";
 	  	   cin>>cases;
 	      if(cases==0){
@@ -439,6 +544,9 @@ void viewer(){    // viewer system
 	  			del_booking();
 	  			check_(viewer);
 			  }
+			else if(cases==5){
+	  			fun();
+			  }
 			else{
 	  			cout<<"this number is incorrect!\n";
 	  			cout<<" _________________________________________________\n";
@@ -454,10 +562,10 @@ void fun(){   //solve here
 	      <<"\t\t\t******************************\n\n";
 	   cout<<"\t\t______________________________________________\n";
    	int file;
-      cout<<"\n\t\t\t   What you want to open \n";
+      cout<<"\n\t\t\t  What do you want to open \n";
       cout<<"\t\t______________________________________________\n";
       cout<<"\n\t\t\t   1- Management System \n"
-	       <<"\n\t\t\t   2- Viewer System\n";
+	       <<"\n\t\t\t   2- Viewers System\n";
 	   cout<<"\t\t______________________________________________\n";
 	        cin>>file;
 	   switch(file){
