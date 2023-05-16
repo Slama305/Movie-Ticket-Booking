@@ -13,6 +13,14 @@ class Book:
         self.phone = phone
         self.num_tick = num_tick
 
+def is_found(check):
+    with open('movie.txt', 'r') as file:
+        for line in file:
+            st = line.strip().split('\t')
+            if st[1] == check:
+                return True
+    return False
+
 def insert_movie():
     with open('movie.txt','a') as file :
         c = 'y'
@@ -134,6 +142,10 @@ def delete_all_movies():
 def insert_data():
     with open('data.txt', 'a') as user:
         movie_name = input("Enter movie name: ")
+        if not is_found(movie_name): 
+            print("\n\tThis movie is not found..!\n")
+            print("___________________________________________________")
+            return
         user_name = input("Enter your name: ")
         phone = input("Enter your phone number: ")
         num_tick = input("Enter number of tickets: ")
@@ -153,6 +165,7 @@ def insert_data():
                 print(f"\tMovie name: {m.name}")
                 print(f"\tDate: {m.date}")
                 print(f"\tTime: {m.time}")
+                print(f"\tprice: {m.price}")
                 print(f"\tTotal seats: {int(num_tick)}")
                 print(f"\tTotal amount: {int(num_tick) * int(m.price)} EGP\n")
                 print("___________________________________________________")
@@ -161,6 +174,14 @@ def insert_data():
         if not flag:
             print("\n\tThis movie is not found..!\n")
             print("___________________________________________________")
+
+def view_booking():
+    with open('data.txt', 'r') as user :
+        print('movie_name\tuser_name\tphone\tnum_tick ')
+        print('--------------------------------------')
+        for line in user:
+            print(line,end=' ')
+view_booking()
 
 def delete_booking():
     check = input("Please enter your name to delete bookings: ")
@@ -195,10 +216,11 @@ def management():
     print("\t\t\t   Press (1) Insert Movie\n"
           "\t\t\t   Press (2) View All Movie\n"
           "\t\t\t   Press (3) Search Movie\n"
-          "\t\t\t   Press (4) Update movie\n"
-          "\t\t\t   Press (5) Delete movie\n"
-          "\t\t\t   Press (6) Delete All movie\n"
-          "\t\t\t   Press (7) HOME\n"
+          "\t\t\t   Press (4) Update Movie\n"
+          "\t\t\t   Press (5) Delete Movie\n"
+          "\t\t\t   Press (6) Delete All Movies\n"
+          "\t\t\t   Press (7) View All Movie\n"
+          "\t\t\t   Press (8) HOME\n"
           "\t\t\t   Press (0) Exit\n\n")
     cases = int(input())
     if cases == 0:
@@ -222,10 +244,10 @@ def management():
         delete_all_movies()
         check_(management)
     elif cases == 7:
-        fun()
-   # elif cases == 7:
-    #    booking_requests()
-   #     check_(management)
+        view_booking()
+        check_(management)
+    elif cases == 8:
+        home()
     else:
         print("this number is incorrect!\n")
         print(" _________________________________________________\n")
@@ -253,12 +275,12 @@ def viewer():
         delete_booking()
         check_(viewer)
     elif cases == 5:
-        fun()
+        home()
     else:
         print("this number is incorrect!\n")
         print(" _________________________________________________\n")
 
-def fun():   
+def home():   
     print("\t\t\t******************************\n"
           "\t\t\t**                          **\n"
           "\t\t\t**   Movie Ticket booking   **\n"
@@ -281,7 +303,7 @@ def fun():
             print("\n\t\t\t____This password incorrect____\n")
     elif file == 2:
         viewer()
-fun()
+home()
 #insert_movie()
 #view_all_movie()
 #update()
