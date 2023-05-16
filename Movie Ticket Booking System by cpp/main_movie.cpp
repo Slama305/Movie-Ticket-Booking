@@ -101,6 +101,8 @@ void insert_movie(){
 	movie m ;
 	f_movie.open("movie.txt",ios::out|ios::app);
 	if(f_movie.is_open() ){
+	char check;
+	do{
 		cout<<" Enter Movie Code : ";
 		cin>>m.code;
 		cout<<" Enter Name : ";
@@ -112,8 +114,14 @@ void insert_movie(){
 		cout<<" Enter Time : ";
 		cin>>m.time;
 		f_movie.write((char*)&m,sizeof(m));
-		cout<<"\n\t\t Record insert sucessfull \n";
-		cout<<" _________________________________________________\n";		
+		//////////////////////////////////////////
+		cout<<"\n\t\t Movie insert sucessfull \n";
+		cout<<" _________________________________________________\n";
+		cout<<"Do you want to add another Movie ?(y , n) ";
+		cin>>check;
+		
+	}while(check=='y');
+	cout<<"\n__________Done___________\n\n";
 	f_movie.close();
 	}
    else{
