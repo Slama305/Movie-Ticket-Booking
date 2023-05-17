@@ -181,7 +181,7 @@ def view_booking():
         print('--------------------------------------')
         for line in user:
             print(line,end=' ')
-view_booking()
+
 
 def delete_booking():
     check = input("Please enter your name to delete bookings: ")
